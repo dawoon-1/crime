@@ -1,12 +1,13 @@
-import chardet  # 여기서 chardet 라이브러리 임포트
+import pandas as pd
 
-filename = 'crime_data.csv'
+# 원본 CSV 불러오기
+df = pd.read_csv('crime_data.csv', encoding='utf-8')
 
-with open(filename, 'rb') as f:
-    rawdata = f.read(10000)  # 앞 10,000바이트 읽기
+# 긴 형태로 변환
+df_melt = pd.melt(df, id_vars=['범죄대분류', '범죄중분류'], var_name='지역명', value_name='발생건수')
 
-result = chardet.detect(rawdata)
-encoding = result['encoding']
+# 결과 확인
+print(df_melt.head())
 
-print(f"추측된 인코딩: {encoding}")
-print(f"신뢰도: {result['confidence']}")
+# 필요시 새 CSV로 저장
+df_melt.to_csv('crime_data_long.csv', index=False)
