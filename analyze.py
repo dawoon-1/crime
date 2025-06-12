@@ -1,7 +1,7 @@
 import pandas as pd
 
 # CSV 파일 읽기
-df = pd.read_csv('crime_data.csv', encoding='utf-8')
+df = pd.read_csv('crime_data.csv', encoding='euc-kr')
 
 # 컬럼명 확인
 print("컬럼명 목록:")
