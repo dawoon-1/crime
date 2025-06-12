@@ -16,7 +16,6 @@ m = folium.Map(location=[37.5665, 126.9780], zoom_start=10)
 # 각 지역 마커 추가
 for _, row in df.iterrows():
     folium.Marker(
-        location=[row["위도"], row["경도"]],
         popup=(
             f"<b>{row['지역']}</b><br>"
             f"살인: {row['살인']}<br>"
