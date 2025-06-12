@@ -7,7 +7,8 @@ st.set_page_config(page_title="지역별 범죄 지도", layout="wide")
 st.title("📍 지역별 범죄 발생 지도")
 
 # CSV 데이터 불러오기
-df = pd.read_csv("crime_data.csv")
+df = pd.read_csv("crime_data.csv", encoding="euc-kr")
+
 
 # 지도 초기 위치 (서울 기준)
 m = folium.Map(location=[37.5665, 126.9780], zoom_start=10)
