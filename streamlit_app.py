@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # CSV 파일 읽기
-df = pd.read_csv('crime_data.csv')
+df = pd.read_csv('year_data.csv')
 
 # 그래프 크기 설정
 plt.figure(figsize=(12, 6))
