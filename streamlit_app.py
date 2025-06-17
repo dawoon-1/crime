@@ -2,48 +2,34 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 
-st.set_page_config(page_title="부산 5대 범죄 시각화", layout="wide")
+st.title("📊 부산 동별 범죄 발생률 시각화")
 
-st.title("📊 부산 동별 5대 범죄 통계 시각화")
-st.write("엑셀 또는 CSV 파일을 업로드하여 범죄 평균을 기준으로 시각화합니다.")
-
-# 1. 파일 업로드
-uploaded_file = st.file_uploader("CSV 또는 엑셀 파일 업로드", type=["csv", "xlsx"])
+# 파일 업로드
+uploaded_file = st.file_uploader("CSV 또는 Excel 파일 업로드", type=["csv", "xlsx"])
 
 if uploaded_file is not None:
-    # 2. 파일 확장자에 따라 판다스로 읽기
-    if uploaded_file.name.endswith('.csv'):
+    # CSV 또는 엑셀 읽기
+    if uploaded_file.name.endswith('busan.csv'):
         df = pd.read_csv(uploaded_file)
     else:
         df = pd.read_excel(uploaded_file)
 
-    # 3. 데이터 미리보기
-    st.subheader("원본 데이터 미리보기")
+    # 필요한 열 이름: "동이름", "범죄발생률" (예시)
+    st.subheader("원본 데이터")
     st.dataframe(df)
 
-    # 4. 평균 기준으로 정렬
-    try:
-        df_sorted = df.sort_values(by='평균', ascending=True)
-    except KeyError:
-        st.error("⚠️ '평균'이라는 열이 존재하지 않습니다. 파일에 평균 열을 포함해주세요.")
-        st.stop()
+    # 범죄율 기준 정렬
+    df_sorted = df.sort_values(by="범죄발생률", ascending=True)
 
-    # 5. 시각화: 막대그래프
-    st.subheader("📉 평균 범죄율 막대그래프")
-
-    fig, ax = plt.subplots(figsize=(12, 6))
-    bars = ax.barh(df_sorted['동이름'], df_sorted['평균'], color='skyblue')
-    ax.set_xlabel('평균 범죄 건수')
-    ax.set_ylabel('동 이름')
-    ax.set_title('부산 동별 평균 범죄율')
-
-    # 값 표시
-    for bar in bars:
-        width = bar.get_width()
-        ax.text(width + 0.1, bar.get_y() + bar.get_height()/2, f'{width:.1f}', va='center')
-
+    # 그래프 그리기
+    st.subheader("📉 범죄 발생률 (낮은 순)")
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.barh(df_sorted["동이름"], df_sorted["범죄발생률"], color='salmon')
+    ax.set_xlabel("범죄 발생률")
+    ax.set_ylabel("부산 동이름")
+    ax.set_title("부산 동별 범죄 발생률")
     st.pyplot(fig)
 
-    # 6. 가장 안전한 동 표시
+    # 가장 낮은 동 이름
     safest = df_sorted.iloc[0]
-    st.success(f"✅ **가장 안전한 동**은 **{safest['동이름']}**입니다. (평균 범죄율: {safest['평균']:.1f})")
+    st.success(f"✅ 범죄 발생률이 가장 낮은 지역: **{safest['동이름']}** ({safest['범죄발생률']})")
